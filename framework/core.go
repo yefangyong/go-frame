@@ -61,6 +61,11 @@ func (c *Core) FindRouteByRequest(request *http.Request) ControllerHandle {
 	return nil
 }
 
+// 分组路由
+func (c *Core) Group(prefix string) *Group {
+	return NewGroup(c, prefix)
+}
+
 func (c *Core) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 
 	// 封装自定义 context

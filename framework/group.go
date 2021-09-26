@@ -48,7 +48,7 @@ func (group *Group) Post(url string, handler ControllerHandle) {
 // 实现 Delete 方法
 func (group *Group) Delete(url string, handler ControllerHandle) {
 	url = group.getAbsolutePrefix() + url
-	group.core.Get(url, handler)
+	group.core.Delete(url, handler)
 }
 
 // 递归获取当前group的绝对路径
@@ -57,4 +57,11 @@ func (group *Group) getAbsolutePrefix() string {
 		return group.prefix
 	}
 	return group.parent.getAbsolutePrefix() + group.prefix
+}
+
+// 实现 Group 方法
+func (group *Group) Group(url string) IGroup {
+	cgroup := NewGroup(group.core, url)
+	cgroup.parent = group
+	return cgroup
 }
