@@ -12,10 +12,10 @@ type Tree struct {
 
 // 代表节点
 type node struct {
-	isLast  bool             // 该节点是否能成为一个独立的 url,是否自身就是一个终极节点
-	segment string           // url 中的字符串
-	handler ControllerHandle // 节点中的控制器
-	childs  []*node
+	isLast   bool               // 该节点是否能成为一个独立的 url,是否自身就是一个终极节点
+	segment  string             // url 中的字符串
+	handlers []ControllerHandle // 节点中的控制器
+	childs   []*node
 }
 
 // 初始化一个节点
@@ -106,7 +106,7 @@ func (n *node) matchNode(url string) *node {
 /:user/name
 /:user/name/:age (冲突)
 */
-func (tree *Tree) AddRouter(url string, handler ControllerHandle) error {
+func (tree *Tree) AddRouter(url string, handler ...ControllerHandle) error {
 	n := tree.root
 	if n.matchNode(url) != nil {
 		return errors.New("route exist: " + url)
@@ -120,7 +120,7 @@ func (tree *Tree) AddRouter(url string, handler ControllerHandle) error {
 		if !isWildSegment(segment) {
 			segment = strings.ToUpper(segment)
 		}
-		isLase := index == len(segments)-1
+		isLast := index == len(segments)-1
 
 		var objNode *node // 标记是否有合适的子节点
 		childNodes := n.filterChildNodes(segment)
@@ -137,9 +137,9 @@ func (tree *Tree) AddRouter(url string, handler ControllerHandle) error {
 			// 创建一个当前node的节点
 			cnode := newNode()
 			cnode.segment = segment
-			if isLase {
+			if isLast {
 				cnode.isLast = true
-				cnode.handler = handler
+				cnode.handlers = handler
 			}
 			n.childs = append(n.childs, cnode)
 			objNode = cnode
@@ -151,10 +151,10 @@ func (tree *Tree) AddRouter(url string, handler ControllerHandle) error {
 }
 
 // 根据 url 获取handler
-func (tree *Tree) FindHandler(url string) ControllerHandle {
+func (tree *Tree) FindHandler(url string) []ControllerHandle {
 	matchNode := tree.root.matchNode(url)
 	if matchNode == nil {
 		return nil
 	}
-	return matchNode.handler
+	return matchNode.handlers
 }

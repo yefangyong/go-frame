@@ -19,9 +19,10 @@ type Context struct {
 
 	// 写保护机制
 	writerMux *sync.Mutex
-
+	handlers  []ControllerHandle
 	// 是否超时标记位
 	hasTimeout bool
+	index      int
 }
 
 func NewContext(r *http.Request, w http.ResponseWriter) *Context {
@@ -30,7 +31,24 @@ func NewContext(r *http.Request, w http.ResponseWriter) *Context {
 		responseWriter: w,
 		ctx:            r.Context(),
 		writerMux:      &sync.Mutex{},
+		index:          -1,
 	}
+}
+
+// 设置handlers
+func (ctx *Context) SetHandlers(handlers []ControllerHandle) {
+	ctx.handlers = handlers
+}
+
+// 核心函数，调用context的下一个函数
+func (ctx *Context) Next() error {
+	ctx.index++
+	if ctx.index < len(ctx.handlers) {
+		if err := ctx.handlers[ctx.index](ctx); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // #region base function
