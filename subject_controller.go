@@ -1,12 +1,20 @@
 package main
 
-import "github.com/yefangyong/go-frame/framework/gin"
+import (
+	"fmt"
+
+	"github.com/yefangyong/go-frame/framework/gin"
+	"github.com/yefangyong/go-frame/provider/demo"
+)
 
 func SubjectAddController(c *gin.Context) {
 	c.ISetOkStatus().IJson("ok, SubjectAddController")
 }
 
 func SubjectListController(c *gin.Context) {
+	ins := c.MustMake(demo.Key).(demo.Service)
+	res := ins.GetFoo()
+	fmt.Println(res)
 	c.ISetOkStatus().IJson("ok, SubjectListController")
 }
 

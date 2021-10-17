@@ -8,12 +8,15 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/yefangyong/go-frame/provider/demo"
+
 	"github.com/yefangyong/go-frame/framework/gin"
 	"github.com/yefangyong/go-frame/framework/middleware"
 )
 
 func main() {
 	core := gin.New()
+	core.Bind(&demo.DemoServiceProvider{})
 	core.Use(gin.Recovery())
 	core.Use(middleware.RecordRequestLog())
 	registerRouter(core)

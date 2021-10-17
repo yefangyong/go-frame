@@ -14,6 +14,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/yefangyong/go-frame/framework"
+
 	"github.com/yefangyong/go-frame/framework/gin/internal/bytesconv"
 	"github.com/yefangyong/go-frame/framework/gin/render"
 )
@@ -56,7 +58,8 @@ type RoutesInfo []RouteInfo
 // Create an instance of Engine, by using New() or Default()
 type Engine struct {
 	RouterGroup
-
+	// 容器
+	container framework.Container
 	// Enables automatic redirection if the current route can't be matched but a
 	// handler for the path with (without) the trailing slash exists.
 	// For example if /foo/ is requested but a route only exists for /foo, the
@@ -154,6 +157,7 @@ func New() *Engine {
 			root:     true,
 		},
 		FuncMap:                template.FuncMap{},
+		container:              framework.NewHadeContainer(),
 		RedirectTrailingSlash:  true,
 		RedirectFixedPath:      false,
 		HandleMethodNotAllowed: false,
@@ -186,7 +190,7 @@ func Default() *Engine {
 
 func (engine *Engine) allocateContext() *Context {
 	v := make(Params, 0, engine.maxParams)
-	return &Context{engine: engine, params: &v}
+	return &Context{engine: engine, params: &v, container: engine.container}
 }
 
 // Delims sets template left and right delims and returns a Engine instance.
