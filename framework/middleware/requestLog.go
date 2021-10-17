@@ -1,21 +1,18 @@
 package middleware
 
 import (
-	"go-frame/framework"
 	"log"
 	"time"
+
+	"github.com/yefangyong/go-frame/framework/gin"
 )
 
-func RecordRequestLog() framework.ControllerHandle {
-	return func(c *framework.Context) error {
+func RecordRequestLog() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		start := time.Now()
-		err := c.Next()
-		if err != nil {
-			return err
-		}
+		c.Next()
 		end := time.Now()
 		cost := end.Sub(start)
-		log.Printf("api request url:%s,time:%v\n", c.GetRequest().URL, cost.Microseconds())
-		return nil
+		log.Printf("api request url:%s,time:%v\n", c.Request.URL.Path, cost.Microseconds())
 	}
 }

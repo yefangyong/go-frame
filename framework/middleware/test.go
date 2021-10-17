@@ -2,29 +2,22 @@ package middleware
 
 import (
 	"fmt"
-	"go-frame/framework"
+
+	"github.com/yefangyong/go-frame/framework/gin"
 )
 
-func Test1() framework.ControllerHandle {
-	return func(c *framework.Context) error {
+func Test1() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		fmt.Println("this is a test1 start")
-		err := c.Next()
-		if err != nil {
-			return err
-		}
+		c.Next()
 		fmt.Println("this is a test1 end")
-		return nil
 	}
 }
 
-func Test2() framework.ControllerHandle {
-	return func(c *framework.Context) error {
+func Test2() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		fmt.Println("this is a test2 start")
-		err := c.Next()
-		if err != nil {
-			return err
-		}
+		c.Next()
 		fmt.Println("this is a test2 end")
-		return nil
 	}
 }

@@ -3,15 +3,19 @@ package main
 import (
 	"context"
 	"fmt"
-	"go-frame/framework"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/yefangyong/go-frame/framework/gin"
+	"github.com/yefangyong/go-frame/framework/middleware"
 )
 
 func main() {
-	core := framework.NewCore()
+	core := gin.New()
+	core.Use(gin.Recovery())
+	core.Use(middleware.RecordRequestLog())
 	registerRouter(core)
 	server := &http.Server{
 		Handler: core,
