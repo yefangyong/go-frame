@@ -1,6 +1,6 @@
 package demo
 
-const Key = "demo"
+const DemoKey = "demo"
 
 type Service interface {
 	GetAllStudent() []Student

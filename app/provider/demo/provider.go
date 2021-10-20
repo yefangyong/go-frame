@@ -27,5 +27,5 @@ func (d *DemoServiceProvider) Params(container framework.Container) []interface{
 }
 
 func (d *DemoServiceProvider) Name() string {
-	return Key
+	return DemoKey
 }

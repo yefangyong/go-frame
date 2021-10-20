@@ -15,6 +15,6 @@ func NewDemoService(params ...interface{}) (interface{}, error) {
 
 func (d *DemoService) GetAllStudent() []Student {
 	return []Student{
-		{ID: 1, Name: "yfy"}, {ID: 2, Name: "jsz"},
+		{ID: 1, Name: "yfy323"}, {ID: 2, Name: "jsz12"},
 	}
 }
