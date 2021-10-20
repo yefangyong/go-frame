@@ -8,18 +8,23 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/yefangyong/go-frame/provider/demo"
+	httpHade "github.com/yefangyong/go-frame/app/http"
+
+	demo2 "github.com/yefangyong/go-frame/app/provider/demo"
 
 	"github.com/yefangyong/go-frame/framework/gin"
 	"github.com/yefangyong/go-frame/framework/middleware"
+	"github.com/yefangyong/go-frame/framework/provider/app"
 )
 
 func main() {
 	core := gin.New()
-	core.Bind(&demo.DemoServiceProvider{})
+	// 绑定具体的服务
+	core.Bind(&app.HadeAppProvider{})
+	core.Bind(&demo2.DemoServiceProvider{})
+	httpHade.Routes(core)
 	core.Use(gin.Recovery())
 	core.Use(middleware.RecordRequestLog())
-	registerRouter(core)
 	server := &http.Server{
 		Handler: core,
 		Addr:    ":8082",
