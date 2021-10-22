@@ -39,4 +39,6 @@ func AddAppCommand(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(demo.InitFoo())
 
 	rootCmd.AddCronCommand("* * * * * *", demo.Foo1Command)
+
+	//rootCmd.AddCronCommand("* * * * * *", demo.FooCommand)
 }
