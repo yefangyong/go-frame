@@ -5,6 +5,8 @@ import (
 	"flag"
 	"path/filepath"
 
+	"github.com/google/uuid"
+
 	"github.com/yefangyong/go-frame/framework/util"
 
 	"github.com/yefangyong/go-frame/framework"
@@ -13,6 +15,7 @@ import (
 type HadeApp struct {
 	container  framework.Container // 服务容器
 	baseFolder string              // 基础路径
+	appId      string
 }
 
 // Version 实现版本
@@ -82,6 +85,11 @@ func (h HadeApp) ConfigFolder() string {
 	return filepath.Join(h.BaseFolder(), "config")
 }
 
+// GetAppId  获取AppId
+func (h HadeApp) APPID() string {
+	return h.appId
+}
+
 // NewHadeApp 初始化HadeApp
 func NewHadeApp(params ...interface{}) (interface{}, error) {
 	if len(params) != 2 {
@@ -91,5 +99,6 @@ func NewHadeApp(params ...interface{}) (interface{}, error) {
 	// 有两个参数，一个是容器，一个是baseFolder
 	container := params[0].(framework.Container)
 	baseFolder := params[1].(string)
-	return &HadeApp{baseFolder: baseFolder, container: container}, nil
+	appId := uuid.New().String()
+	return &HadeApp{baseFolder: baseFolder, container: container, appId: appId}, nil
 }

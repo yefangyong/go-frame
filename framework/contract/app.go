@@ -3,6 +3,10 @@ package contract
 const AppKey = "hade:app"
 
 type App interface {
+
+	//AppId
+
+	APPID() string
 	// app 版本
 	Version() string
 
