@@ -35,5 +35,8 @@ func RunCommand(container framework.Container) error {
 
 // 业务的相关命令
 func AddAppCommand(rootCmd *cobra.Command) {
+
 	rootCmd.AddCommand(demo.InitFoo())
+
+	rootCmd.AddCronCommand("* * * * * *", demo.Foo1Command)
 }

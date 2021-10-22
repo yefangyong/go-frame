@@ -19,8 +19,8 @@ var Foo1Command = &cobra.Command{
 	Aliases: []string{"fo1", "f1"},
 	Example: "foo1命令的例子",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		container := cmd.GetContainer()
-		log.Println(container)
+		//container := cmd.GetContainer()
+		log.Println("this is a demo")
 		return nil
 	},
 }
