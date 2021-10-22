@@ -1,6 +1,7 @@
 package console
 
 import (
+	"github.com/yefangyong/go-frame/app/console/command/demo"
 	"github.com/yefangyong/go-frame/framework"
 	"github.com/yefangyong/go-frame/framework/cobra"
 	"github.com/yefangyong/go-frame/framework/command"
@@ -32,6 +33,7 @@ func RunCommand(container framework.Container) error {
 	return rootCmd.Execute()
 }
 
+// 业务的相关命令
 func AddAppCommand(rootCmd *cobra.Command) {
-
+	rootCmd.AddCommand(demo.InitFoo())
 }
