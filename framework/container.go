@@ -132,7 +132,7 @@ func (hade *HadeContainer) make(key string, params []interface{}, forceNew bool)
 	defer hade.lock.RUnlock()
 	sp := hade.findServiceProvider(key)
 	if sp == nil {
-		return nil, errors.New("contract " + key + "have not register")
+		return nil, errors.New("contract " + key + " have not register")
 	}
 	if forceNew {
 		return hade.newInstance(sp, params)
