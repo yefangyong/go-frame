@@ -9,6 +9,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/sevlyar/go-daemon"
+
 	"github.com/yefangyong/go-frame/framework/util"
 
 	"github.com/erikdubbelboer/gspt"
@@ -17,8 +19,11 @@ import (
 	"github.com/yefangyong/go-frame/framework/contract"
 )
 
+var cronDaemon = false
+
 // 初始化定时任务命令
 func InitCronCommand() *cobra.Command {
+	cronStartCommand.Flags().BoolVar(&cronDaemon, "daemon", false, "start serve daemon")
 	// 启动
 	cronCommand.AddCommand(cronStartCommand)
 	// 查看定时任务列表
@@ -56,9 +61,36 @@ var cronStartCommand = &cobra.Command{
 		// 设置cron的日志地址和进程ID地址
 		pidFolder := appService.RuntimeFolder()
 		serverPidFile := filepath.Join(pidFolder, "cron.pid")
-		//logFolder := appService.LogFolder()
-		//serverLogFile := filepath.Join(logFolder, "cron.log")
-		//currentFolder := appService.BaseFolder()
+		logFolder := appService.LogFolder()
+		serverLogFile := filepath.Join(logFolder, "cron.log")
+		currentFolder := appService.BaseFolder()
+
+		if cronDaemon {
+			cntxt := &daemon.Context{
+				PidFileName: serverPidFile,
+				PidFilePerm: 0664,
+				LogFileName: serverLogFile,
+				LogFilePerm: 0640,
+				WorkDir:     currentFolder,
+				Umask:       027,
+				Args:        []string{"", "cron", "start", "--daemon=true"},
+			}
+			d, err := cntxt.Reborn()
+			if err != nil {
+				return err
+			}
+			if d != nil {
+				fmt.Println("cron serve started, pid:", d.Pid)
+				fmt.Println("log file:", serverLogFile)
+				return nil
+			}
+			// 子进程执行Cron.run
+			defer cntxt.Release()
+			fmt.Println("daemon start")
+			gspt.SetProcTitle("hade cron")
+			c.Root().Cron.Run()
+			return nil
+		}
 
 		// no deamon mode
 		fmt.Println("start cron job")

@@ -48,7 +48,7 @@ func (d *DistributedService) Select(serviceName string, appId string, hold time.
 		return string(selectIDByte), nil
 	}
 
-	//开启一个携程，定时释放锁
+	//开启一个协程，定时释放锁
 	go func() {
 		defer func() {
 			// 释放文件锁
