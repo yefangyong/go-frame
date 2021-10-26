@@ -60,10 +60,9 @@ func (hade *HadeContainer) PrintProviders() []string {
 
 func (hade *HadeContainer) Bind(provider ServiceProvider) error {
 	hade.lock.Lock()
-	defer hade.lock.Unlock()
 	key := provider.Name()
 	hade.providers[key] = provider
-
+	hade.lock.Unlock()
 	if provider.IsDefer() == false {
 		if err := provider.Boot(hade); err != nil {
 			return err
@@ -86,8 +85,8 @@ func (hade *HadeContainer) IsBind(key string) bool {
 }
 
 func (hade *HadeContainer) findServiceProvider(key string) ServiceProvider {
-	hade.lock.RLock()
-	defer hade.lock.RUnlock()
+	//hade.lock.RLock()
+	//defer hade.lock.RUnlock()
 	if sp, ok := hade.providers[key]; ok {
 		return sp
 	}

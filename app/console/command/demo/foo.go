@@ -3,6 +3,8 @@ package demo
 import (
 	"log"
 
+	"github.com/yefangyong/go-frame/framework/contract"
+
 	"github.com/yefangyong/go-frame/framework/cobra"
 )
 
@@ -33,6 +35,9 @@ var FooCommand = &cobra.Command{
 	Example: "foo命令的例子",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		log.Println("this is foo command")
+		container := cmd.GetContainer()
+		envService := container.MustMake(contract.EnvKey).(contract.Env)
+		log.Println(envService.All())
 		return nil
 	},
 }

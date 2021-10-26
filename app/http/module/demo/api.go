@@ -39,7 +39,9 @@ func (d *DemoApi) Demo3(ctx *gin.Context) {
 }
 
 func (d *DemoApi) Demo(ctx *gin.Context) {
-	user := d.service.getUser()
-	UserDTO := UserModelsToUserDTOs(user)
-	ctx.JSON(200, UserDTO)
+	envService := ctx.MustMake(contract.EnvKey).(contract.Env)
+	println(envService.All())
+	//user := d.service.getUser()
+	//UserDTO := UserModelsToUserDTOs(user)
+	ctx.JSON(200, envService.All())
 }
