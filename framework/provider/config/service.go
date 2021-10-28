@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/yefangyong/go-frame/framework/contract"
+
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/spf13/cast"
@@ -30,7 +32,7 @@ type HadeConfig struct {
 	keyDelim  string                 // 路径的分隔符，默认为点
 	lock      sync.RWMutex           // 配置文件的读写锁
 	envMaps   map[string]string      // 所有的环境变量
-	confMaps  map[string]interface{} //配置文件结构，以 key 为文件名
+	confMaps  map[string]interface{} // 配置文件结构，以 key 为文件名
 	confRaws  map[string][]byte      // 配置文件的原始信息
 }
 
@@ -242,6 +244,14 @@ func (conf *HadeConfig) loadConfigFile(folder string, file string) error {
 		}
 		conf.confRaws[name] = bf
 		conf.confMaps[name] = c
+
+		// 读取app.path中的信息，更新app对应的folder
+		if name == "app" && conf.container.IsBind(contract.AppKey) {
+			if p, ok := c["path"]; ok {
+				appService := conf.container.MustMake(contract.AppKey).(contract.App)
+				appService.LoadAppConfig(cast.ToStringMapString(p))
+			}
+		}
 	}
 	return nil
 }

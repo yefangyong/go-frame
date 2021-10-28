@@ -36,8 +36,6 @@ var FooCommand = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		log.Println("this is foo command")
 		container := cmd.GetContainer()
-		envService := container.MustMake(contract.EnvKey).(contract.Env)
-		log.Println(envService.All())
 		configService := container.MustMake(contract.ConfigKey).(contract.Config)
 		log.Println(configService.Get("app.url"))
 		return nil

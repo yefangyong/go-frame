@@ -31,4 +31,6 @@ type App interface {
 	RuntimeFolder() string
 	// TestFolder 存放测试所需要的信息
 	TestFolder() string
+
+	LoadAppConfig(kv map[string]string)
 }

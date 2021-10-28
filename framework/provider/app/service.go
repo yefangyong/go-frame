@@ -16,11 +16,19 @@ type HadeApp struct {
 	container  framework.Container // 服务容器
 	baseFolder string              // 基础路径
 	appId      string
+	configMap  map[string]string // 配置加载
 }
 
 // Version 实现版本
 func (h HadeApp) Version() string {
 	return "0.0.3"
+}
+
+// 加载自定义配置
+func (h *HadeApp) LoadAppConfig(kv map[string]string) {
+	for k, v := range kv {
+		h.configMap[k] = v
+	}
 }
 
 // BaseFolder 表示基础目录，可以代表开发场景的目录，也可以代表运行时候的目录
@@ -33,44 +41,71 @@ func (h HadeApp) BaseFolder() string {
 }
 
 func (h HadeApp) StorageFolder() string {
+	if val, ok := h.configMap["storage_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.baseFolder, "storage")
 }
 
 // 日志文件目录地址
 func (h HadeApp) LogFolder() string {
+	if val, ok := h.configMap["log_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.StorageFolder(), "log")
 }
 
 // ProviderFolder 定义业务自己的服务提供者地址
 func (h HadeApp) ProviderFolder() string {
+	if val, ok := h.configMap["provider_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.BaseFolder(), "provider")
 }
 
 func (h HadeApp) HttpFolder() string {
+	if val, ok := h.configMap["http_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.BaseFolder(), "http")
 }
 
 func (h HadeApp) ConsoleFolder() string {
+	if val, ok := h.configMap["console_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.BaseFolder(), "console")
 }
 
 // MiddlewareFolder 定义业务自己定义的中间件
 func (h HadeApp) MiddlewareFolder() string {
+	if val, ok := h.configMap["middleware_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.HttpFolder(), "middleware")
 }
 
 // CommandFolder 定义业务定义的命令
 func (h HadeApp) CommandFolder() string {
+	if val, ok := h.configMap["command_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.ConsoleFolder(), "command")
 }
 
 // RuntimeFolder 定义业务的运行中间态信息
 func (h HadeApp) RuntimeFolder() string {
+	if val, ok := h.configMap["runtime_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.StorageFolder(), "runtime")
 }
 
 // TestFolder 定义测试需要的信息
 func (h HadeApp) TestFolder() string {
+	if val, ok := h.configMap["test_folder"]; ok {
+		return val
+	}
 	return filepath.Join(h.BaseFolder(), "test")
 }
 
@@ -99,5 +134,6 @@ func NewHadeApp(params ...interface{}) (interface{}, error) {
 		flag.Parse()
 	}
 	appId := uuid.New().String()
-	return &HadeApp{baseFolder: baseFolder, container: container, appId: appId}, nil
+	configMap := map[string]string{}
+	return &HadeApp{baseFolder: baseFolder, container: container, appId: appId, configMap: configMap}, nil
 }
