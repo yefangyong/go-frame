@@ -40,7 +40,8 @@ func (d *DemoApi) Demo3(ctx *gin.Context) {
 
 func (d *DemoApi) Demo(ctx *gin.Context) {
 	envService := ctx.MustMake(contract.EnvKey).(contract.Env)
-	println(envService.All())
+	logService := ctx.MustMake(contract.LogKey).(contract.Log)
+	logService.Info(ctx, "this is test", map[string]interface{}{})
 	//user := d.service.getUser()
 	//UserDTO := UserModelsToUserDTOs(user)
 	ctx.JSON(200, envService.All())
