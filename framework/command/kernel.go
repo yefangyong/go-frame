@@ -12,4 +12,7 @@ func AddKernelCommands(root *cobra.Command) {
 
 	// 绑定 build 相关命令
 	root.AddCommand(initBuildCommand())
+
+	// 绑定 Dev 调试相关命令
+	root.AddCommand(initDevCommand())
 }

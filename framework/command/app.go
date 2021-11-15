@@ -13,6 +13,9 @@ import (
 	"github.com/yefangyong/go-frame/framework/contract"
 )
 
+// app启动地址
+var appAddress = ""
+
 // AppCommand 是命令行参数第一级为app的命令，它没有实际功能，只是打印帮助文档
 var appCommand = &cobra.Command{
 	Use:   "app",
@@ -34,7 +37,7 @@ var appStartCommand = &cobra.Command{
 		core := kernelService.HttpEngine()
 		server := &http.Server{
 			Handler: core,
-			Addr:    ":8888",
+			Addr:    appAddress,
 		}
 		go func() {
 			server.ListenAndServe()
@@ -60,6 +63,7 @@ var appStartCommand = &cobra.Command{
 
 // 初始化 app 并且启动服务
 func initAppCommand() *cobra.Command {
+	appStartCommand.Flags().StringVar(&appAddress, "address", ":8888", "设置app启动的地址，默认为:8888")
 	appCommand.AddCommand(appStartCommand)
 	return appCommand
 }

@@ -114,6 +114,11 @@ func (h HadeApp) ConfigFolder() string {
 	return filepath.Join(h.BaseFolder(), "config")
 }
 
+// AppFolder 表示文件的app目录地址
+func (h HadeApp) AppFolder() string {
+	return filepath.Join(h.BaseFolder(), "app")
+}
+
 // GetAppId  获取AppId
 func (h HadeApp) APPID() string {
 	return h.appId

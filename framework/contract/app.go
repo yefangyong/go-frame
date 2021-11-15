@@ -33,4 +33,7 @@ type App interface {
 	TestFolder() string
 
 	LoadAppConfig(kv map[string]string)
+
+	// 定义业务代码所在的目录，用于监控文件的变动
+	AppFolder() string
 }
