@@ -41,7 +41,7 @@ func initDevConfig(container framework.Container) *devConfig {
 			RefreshTime   int
 			Port          string
 			MonitorFolder string
-		}{RefreshTime: 1, Port: "8072", MonitorFolder: ""},
+		}{RefreshTime: 3, Port: "8072", MonitorFolder: ""},
 		Frontend: struct{ Port string }{Port: "8071"},
 	}
 
@@ -280,9 +280,9 @@ func (p *Proxy) monitorBackend() error {
 	// 开启计时时间机制
 	refreshTime := p.devConfig.Backend.RefreshTime
 	t := time.NewTimer(time.Duration(refreshTime) * time.Second)
-
 	// 先停止计时器
 	t.Stop()
+
 	for {
 		select {
 		case <-t.C:
@@ -298,10 +298,11 @@ func (p *Proxy) monitorBackend() error {
 			fmt.Println("...检测到文件更新，重启服务结束...")
 			// 停止计时器
 			t.Stop()
-		case _, ok := <-watcher.Events:
+		case file, ok := <-watcher.Events:
 			if !ok {
 				continue
 			}
+			fmt.Println(file)
 			// 有文件更新事件，重置计时器
 			t.Reset(time.Duration(refreshTime) * time.Second)
 		case err, ok := <-watcher.Errors:
@@ -310,7 +311,7 @@ func (p *Proxy) monitorBackend() error {
 			}
 			// 如果有文件监听错误，则停止计数器
 			fmt.Println("监听文件夹错误：", err.Error())
-
+			t.Reset(time.Duration(refreshTime) * time.Second)
 		}
 	}
 }
