@@ -1,6 +1,8 @@
 package demo
 
 import (
+	"fmt"
+
 	"github.com/yefangyong/go-frame/app/provider/demo"
 	"github.com/yefangyong/go-frame/framework/contract"
 	"github.com/yefangyong/go-frame/framework/gin"
@@ -35,14 +37,14 @@ func (d *DemoApi) Demo2(ctx *gin.Context) {
 func (d *DemoApi) Demo3(ctx *gin.Context) {
 	app := ctx.MustMake(contract.AppKey).(contract.App)
 	baseFolder := app.BaseFolder()
+	fmt.Println("this is test")
 	ctx.JSON(200, baseFolder)
 }
 
 func (d *DemoApi) Demo(ctx *gin.Context) {
-	envService := ctx.MustMake(contract.EnvKey).(contract.Env)
 	logService := ctx.MustMake(contract.LogKey).(contract.Log)
 	logService.Info(ctx, "this is test", map[string]interface{}{})
 	//user := d.service.getUser()
 	//UserDTO := UserModelsToUserDTOs(user)
-	ctx.JSON(200, envService.All())
+	ctx.JSON(200, "ok")
 }

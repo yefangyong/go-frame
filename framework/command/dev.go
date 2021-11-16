@@ -8,7 +8,13 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"syscall"
+	"time"
+
+	"github.com/yefangyong/go-frame/framework/util"
+
+	"github.com/fsnotify/fsnotify"
 
 	"github.com/yefangyong/go-frame/framework/cobra"
 
@@ -230,6 +236,85 @@ func (p *Proxy) restartFrontend() error {
 	return nil
 }
 
+// rebuildBackend 重新编译后端
+func (p *Proxy) rebuildBackend() error {
+	// 重新编译hade
+	cmdBuild := exec.Command("./hade", "build", "backend")
+	cmdBuild.Stdout = os.Stdout
+	cmdBuild.Stderr = os.Stderr
+	if err := cmdBuild.Start(); err == nil {
+		err = cmdBuild.Wait()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// monitorBackend 监听应用文件
+func (p *Proxy) monitorBackend() error {
+	// 监听
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		return err
+	}
+	defer watcher.Close()
+
+	// 开启监听目标文件夹
+	appFolder := p.devConfig.Backend.MonitorFolder
+	fmt.Println("监控文件夹：", appFolder)
+
+	// 监听所有子目录，需要使用filepath.walk
+	filepath.Walk(appFolder, func(path string, info os.FileInfo, err error) error {
+		if info != nil && !info.IsDir() {
+			return nil
+		}
+
+		// 如果是隐藏的目录比如 . 或者 .. 则不用进行监控
+		if util.IsHiddenDirectory(path) {
+			return nil
+		}
+		return watcher.Add(path)
+	})
+
+	// 开启计时时间机制
+	refreshTime := p.devConfig.Backend.RefreshTime
+	t := time.NewTimer(time.Duration(refreshTime) * time.Second)
+
+	// 先停止计时器
+	t.Stop()
+	for {
+		select {
+		case <-t.C:
+			// 计时器时间到了，代表之前有文件更新事件重置过计时器
+			fmt.Println("...检测到文件更新，重启服务开始...")
+			if err := p.rebuildBackend(); err != nil {
+				fmt.Println("重新编译失败：", err.Error())
+			} else {
+				if err := p.restartBackend(); err != nil {
+					fmt.Println("重新启动失败：", err.Error())
+				}
+			}
+			fmt.Println("...检测到文件更新，重启服务结束...")
+			// 停止计时器
+			t.Stop()
+		case _, ok := <-watcher.Events:
+			if !ok {
+				continue
+			}
+			// 有文件更新事件，重置计时器
+			t.Reset(time.Duration(refreshTime) * time.Second)
+		case err, ok := <-watcher.Errors:
+			if !ok {
+				continue
+			}
+			// 如果有文件监听错误，则停止计数器
+			fmt.Println("监听文件夹错误：", err.Error())
+
+		}
+	}
+}
+
 var devCommand = &cobra.Command{
 	Use:   "dev",
 	Short: "调试模式",
@@ -245,6 +330,7 @@ var devBackendCommand = &cobra.Command{
 	Short: "启动后端调试模式",
 	RunE: func(c *cobra.Command, args []string) error {
 		proxy := NewProxy(c.GetContainer())
+		go proxy.monitorBackend()
 		if err := proxy.startProxy(false, true); err != nil {
 			return err
 		}
@@ -268,6 +354,7 @@ var devAllCommand = &cobra.Command{
 	Short: "同时启动前端和后端进行调试",
 	RunE: func(c *cobra.Command, args []string) error {
 		proxy := NewProxy(c.GetContainer())
+		go proxy.monitorBackend()
 		if err := proxy.startProxy(true, true); err != nil {
 			return err
 		}

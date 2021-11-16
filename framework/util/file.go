@@ -1,6 +1,10 @@
 package util
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+	"strings"
+)
 
 func Exists(path string) bool {
 	_, err := os.Stat(path)
@@ -11,4 +15,9 @@ func Exists(path string) bool {
 		return false
 	}
 	return true
+}
+
+// 判断是否是隐藏目录
+func IsHiddenDirectory(path string) bool {
+	return len(path) > 1 && strings.HasPrefix(filepath.Base(path), ".")
 }
