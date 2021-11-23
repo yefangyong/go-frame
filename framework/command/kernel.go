@@ -18,4 +18,7 @@ func AddKernelCommands(root *cobra.Command) {
 
 	// 绑定自定义生成服务提供者的命令
 	root.AddCommand(initProviderCommand())
+
+	// 绑定中间件 middleware 相关命令
+	root.AddCommand(initMiddlewareCommand())
 }
