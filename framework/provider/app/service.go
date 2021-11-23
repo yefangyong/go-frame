@@ -60,7 +60,7 @@ func (h HadeApp) ProviderFolder() string {
 	if val, ok := h.configMap["provider_folder"]; ok {
 		return val
 	}
-	return filepath.Join(h.BaseFolder(), "provider")
+	return filepath.Join(h.BaseFolder(), "app", "provider")
 }
 
 func (h HadeApp) HttpFolder() string {

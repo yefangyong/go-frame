@@ -15,4 +15,7 @@ func AddKernelCommands(root *cobra.Command) {
 
 	// 绑定 Dev 调试相关命令
 	root.AddCommand(initDevCommand())
+
+	// 绑定自定义生成服务提供者的命令
+	root.AddCommand(initProviderCommand())
 }

@@ -47,6 +47,16 @@ func NewHadeContainer() *HadeContainer {
 	}
 }
 
+func (hade *HadeContainer) ProviderList() []string {
+	var ret []string
+	for _, provider := range hade.providers {
+		name := provider.Name()
+		line := fmt.Sprintf(name)
+		ret = append(ret, line)
+	}
+	return ret
+}
+
 // PrintProviders 输出服务容器中的注册的关键字
 func (hade *HadeContainer) PrintProviders() []string {
 	var ret []string
