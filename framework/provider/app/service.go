@@ -74,7 +74,7 @@ func (h HadeApp) ConsoleFolder() string {
 	if val, ok := h.configMap["console_folder"]; ok {
 		return val
 	}
-	return filepath.Join(h.BaseFolder(), "console")
+	return filepath.Join(h.BaseFolder(), "app", "console")
 }
 
 // MiddlewareFolder 定义业务自己定义的中间件

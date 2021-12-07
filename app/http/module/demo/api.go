@@ -46,5 +46,5 @@ func (d *DemoApi) Demo(ctx *gin.Context) {
 	logService.Info(ctx, "this is test", map[string]interface{}{})
 	//user := d.service.getUser()
 	//UserDTO := UserModelsToUserDTOs(user)
-	ctx.JSON(200, "ok13")
+	ctx.JSON(200, "2323")
 }

@@ -21,4 +21,13 @@ func AddKernelCommands(root *cobra.Command) {
 
 	// 绑定中间件 middleware 相关命令
 	root.AddCommand(initMiddlewareCommand())
+
+	// 绑定 cmd 相关命令
+	root.AddCommand(initCmdCommand())
+
+	// 绑定 config 相关命令
+	root.AddCommand(initConfigCommand())
+
+	// 绑定 env 相关命令
+	root.AddCommand(initEnvCommand())
 }
