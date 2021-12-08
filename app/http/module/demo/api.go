@@ -41,10 +41,13 @@ func (d *DemoApi) Demo3(ctx *gin.Context) {
 	ctx.JSON(200, baseFolder)
 }
 
-func (d *DemoApi) Demo(ctx *gin.Context) {
-	logService := ctx.MustMake(contract.LogKey).(contract.Log)
-	logService.Info(ctx, "this is test", map[string]interface{}{})
-	//user := d.service.getUser()
-	//UserDTO := UserModelsToUserDTOs(user)
-	ctx.JSON(200, "2323")
+// Demo godoc
+// @Summary 获取所有用户
+// @Description 获取所有用户
+// @Produce  json
+// @Tags demo
+// @Success 200 array []UserDTO
+// @Router /demo [get]
+func (api *DemoApi) Demo(c *gin.Context) {
+	c.JSON(200, "this is demo for dev all")
 }
