@@ -11,6 +11,7 @@ import (
 	"github.com/yefangyong/go-frame/framework/provider/kernel"
 	"github.com/yefangyong/go-frame/framework/provider/log"
 	"github.com/yefangyong/go-frame/framework/provider/log/formatter"
+	"github.com/yefangyong/go-frame/framework/provider/orm"
 )
 
 func main() {
@@ -19,6 +20,7 @@ func main() {
 	container.Bind(&env.HadeEnvProvider{})
 	container.Bind(&local.DistributedProvider{})
 	container.Bind(&config.HadeConfigProvider{})
+	container.Bind(&orm.GormProvider{})
 	container.Bind(&log.HadeLogServiceProvider{
 		Driver:    "single",
 		Formatter: formatter.JsonFormatter,
