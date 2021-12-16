@@ -2,7 +2,6 @@ package demo
 
 import (
 	"database/sql"
-	"fmt"
 	"time"
 
 	"github.com/yefangyong/go-frame/framework/contract"
@@ -16,7 +15,6 @@ func (api *DemoApi) DemoOrm(c *gin.Context) {
 	// 初始化一个orm.DB
 	gormService := c.MustMake(contract.ORMKEY).(contract.ORMService)
 	db, err := gormService.GetDB(orm.WithConfigPath("database.default"))
-	fmt.Println(err)
 	if err != nil {
 		logger.Error(c, err.Error(), map[string]interface{}{})
 		c.AbortWithError(500, err)

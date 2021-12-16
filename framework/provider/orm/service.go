@@ -2,7 +2,6 @@ package orm
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
@@ -49,14 +48,13 @@ func (app *HadeGorm) GetDB(option ...contract.DBOption) (*gorm.DB, error) {
 		Logger: OrmLogger,
 	}
 
-	fmt.Println(config)
 	// option 对opt进行修改
 	for _, opt := range option {
 		if err := opt(app.container, config); err != nil {
 			return nil, err
 		}
 	}
-	fmt.Println(config)
+
 	// 如果最终的config没有设置dsn，就生成dsn
 	if config.Dsn == "" {
 		dsn, err := config.FormatDsn()

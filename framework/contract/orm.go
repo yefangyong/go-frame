@@ -1,7 +1,6 @@
 package contract
 
 import (
-	"fmt"
 	"net"
 	"strconv"
 	"time"
@@ -50,7 +49,6 @@ type ORMService interface {
 }
 
 func (conf *DBConfig) FormatDsn() (string, error) {
-	fmt.Println(conf)
 	port := strconv.Itoa(conf.Port)
 	timeout, err := time.ParseDuration(conf.Timeout)
 	if err != nil {
