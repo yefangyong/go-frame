@@ -12,6 +12,7 @@ import (
 	"github.com/yefangyong/go-frame/framework/provider/log"
 	"github.com/yefangyong/go-frame/framework/provider/log/formatter"
 	"github.com/yefangyong/go-frame/framework/provider/orm"
+	"github.com/yefangyong/go-frame/framework/provider/redis"
 )
 
 func main() {
@@ -21,6 +22,7 @@ func main() {
 	container.Bind(&local.DistributedProvider{})
 	container.Bind(&config.HadeConfigProvider{})
 	container.Bind(&orm.GormProvider{})
+	container.Bind(&redis.RedisProvider{})
 	container.Bind(&log.HadeLogServiceProvider{
 		Driver:    "single",
 		Formatter: formatter.JsonFormatter,

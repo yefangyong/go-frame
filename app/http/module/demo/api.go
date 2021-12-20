@@ -15,10 +15,11 @@ type DemoApi struct {
 func Register(r *gin.Engine) error {
 	demoApi := NewDemoApi()
 	r.Bind(&demo.DemoServiceProvider{})
-	r.GET("demo", demoApi.Demo)
+	r.GET("demo", demoApi.DemoRedis)
 	r.GET("demo2", demoApi.Demo2)
 	r.GET("demo3", demoApi.Demo3)
 	r.GET("demo/orm", demoApi.DemoOrm)
+	r.GET("demo/cache/redis", demoApi.DemoRedis)
 	return nil
 }
 
