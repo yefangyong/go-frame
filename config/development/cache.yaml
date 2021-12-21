@@ -1,4 +1,4 @@
-driver: redis # 连接驱动
+driver: memory # 连接驱动
 
 redis:
   host: 127.0.0.1 # ip地址

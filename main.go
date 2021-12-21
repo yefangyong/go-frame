@@ -5,6 +5,7 @@ import (
 	"github.com/yefangyong/go-frame/app/http"
 	"github.com/yefangyong/go-frame/framework"
 	"github.com/yefangyong/go-frame/framework/provider/app"
+	"github.com/yefangyong/go-frame/framework/provider/cache"
 	"github.com/yefangyong/go-frame/framework/provider/config"
 	"github.com/yefangyong/go-frame/framework/provider/distributed/local"
 	"github.com/yefangyong/go-frame/framework/provider/env"
@@ -22,6 +23,7 @@ func main() {
 	container.Bind(&local.DistributedProvider{})
 	container.Bind(&config.HadeConfigProvider{})
 	container.Bind(&orm.GormProvider{})
+	container.Bind(&cache.HadeCacheProvider{})
 	container.Bind(&redis.RedisProvider{})
 	container.Bind(&log.HadeLogServiceProvider{
 		Driver:    "single",
