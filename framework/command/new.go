@@ -41,12 +41,13 @@ var newCommand = &cobra.Command{
 			prompt := &survey.Input{
 				Message: "请输入目录名称：",
 			}
+
 			err := survey.AskOne(prompt, &name)
 			if err != nil {
 				return err
 			}
 
-			folder := filepath.Join(currentPath, name)
+			folder = filepath.Join(currentPath, name)
 			if util.Exists(folder) {
 				isForce := false
 				prompt2 := &survey.Confirm{
@@ -68,6 +69,7 @@ var newCommand = &cobra.Command{
 				}
 			}
 		}
+		fmt.Println(folder)
 		{
 			prompt := &survey.Input{
 				Message: "请输入模块名称（go.mod中的module，默认为文件夹名称）:",
@@ -84,16 +86,28 @@ var newCommand = &cobra.Command{
 			// 获取hade的版本
 			client := github.NewClient(nil)
 			prompt := &survey.Input{
-				Message: "请输入版本名称（参考 https://github.com/yefangyong/go-frame/release,默认为最新版本号）",
+				Message: "请输入版本名称（参考 https://github.com/yefangyong/go-frame/releases,默认为最新版本号）",
 			}
 			err := survey.AskOne(prompt, &version)
 			if err != nil {
 				return err
 			}
 			if version != "" {
+				release, _, err = client.Repositories.GetReleaseByTag(context.Background(), "yefangyong", "go-frame", version)
+				if err != nil || release == nil {
+					fmt.Println("版本不存在，创建应用失败，请参考 https://github.com/gohade/hade/releases")
+					return nil
+				}
+			}
+			if version == "" {
 				release, _, err = client.Repositories.GetLatestRelease(context.Background(), "yefangyong", "go-frame")
+				if err != nil || release == nil {
+					fmt.Println("版本不存在，创建应用失败，请参考 https://github.com/gohade/hade/releases")
+					return nil
+				}
 				version = release.GetTagName()
 			}
+
 			fmt.Println("=================================")
 			fmt.Println("开始创建应用操作")
 			fmt.Println("创建目录：", folder)
@@ -124,7 +138,7 @@ var newCommand = &cobra.Command{
 			}
 			for _, fInfo := range fInfos {
 				// 找到解压后的文件夹
-				if fInfo.IsDir() && strings.Contains(fInfo.Name(), "goFrame-") {
+				if fInfo.IsDir() && strings.Contains(fInfo.Name(), "yefangyong-go-frame-") {
 					if err := os.Rename(filepath.Join(templateFolder, fInfo.Name()), folder); err != nil {
 						return err
 					}
