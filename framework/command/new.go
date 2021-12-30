@@ -170,7 +170,7 @@ var newCommand = &cobra.Command{
 					c = bytes.ReplaceAll(c, []byte("github.com/yefangyong/go-frame/app"), []byte(mod+"/app"))
 					err = ioutil.WriteFile(path, c, 0644)
 					if err != nil {
-						return nil
+						return err
 					}
 				}
 				return nil
