@@ -33,4 +33,7 @@ func AddKernelCommands(root *cobra.Command) {
 
 	// 绑定 swagger 相关命令
 	root.AddCommand(initSwaggerCommand())
+
+	// 绑定 new 相关命令
+	root.AddCommand(initNewCommand())
 }

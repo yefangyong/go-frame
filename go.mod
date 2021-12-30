@@ -9,13 +9,14 @@ require (
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-contrib/cors v1.3.1
-	github.com/gin-contrib/gzip v0.0.3 // indirect
 	github.com/gin-contrib/sse v0.1.0
+	github.com/gin-gonic/gin v1.7.4 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2
+	github.com/google/go-github/v39 v39.2.0
 	github.com/google/uuid v1.1.2
 	github.com/inconshreveable/mousetrap v1.0.0
 	github.com/jianfengye/collection v1.3.2
@@ -34,8 +35,6 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.7.0
-	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2 // indirect
-	github.com/swaggo/gin-swagger v1.3.3 // indirect
 	github.com/swaggo/swag v1.7.6
 	github.com/ugorji/go/codec v1.1.7
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d

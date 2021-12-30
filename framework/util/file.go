@@ -1,7 +1,9 @@
 package util
 
 import (
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,4 +38,27 @@ func SubDir(folder string) ([]string, error) {
 		}
 	}
 	return subDirs, nil
+}
+
+// DownLoadFile 下载远程文件到本地
+func DownLoadFile(filepath string, url string) error {
+
+	// get data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// create the file
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+
+	defer out.Close()
+
+	// write the body to file
+	_, err = io.Copy(out, resp.Body)
+	return err
 }
